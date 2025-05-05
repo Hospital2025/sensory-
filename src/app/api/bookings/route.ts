@@ -1,11 +1,13 @@
-//src/app/api/bookings/route.ts
+import dotenv from 'dotenv'; // Add dotenv import
+dotenv.config(); // Load environment variables
+
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 // Replace with your actual Netlify domain
-const ALLOWED_ORIGIN = 'https://sensoryspa1.netlify.app';
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'https://sensoryspa1.netlify.app'; // Use environment variable for allowed origin
 
 export async function GET() {
   const bookings = await prisma.booking.findMany({ orderBy: { date: 'asc' } });
@@ -45,4 +47,4 @@ export async function OPTIONS() {
       'Access-Control-Allow-Headers': 'Content-Type',
     },
   });
-} 
+}
