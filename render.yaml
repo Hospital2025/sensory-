@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: sensory-app
+    env: node
+    branch: main
+    repo: https://github.com/Hospital2025/sensory-.git
+    installCommand: npm install
+    buildCommand: npm run build
+    startCommand: npm run start
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://…
+      - key: NODE_ENV
+        value: production
+      - key: RENDER_USE_BUN
+        value: "false"
