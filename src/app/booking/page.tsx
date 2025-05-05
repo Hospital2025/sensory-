@@ -22,7 +22,8 @@ export default function BookingPage() {
     'Deep Tissue Massage',
   ];
 
-  const API_BASE = "https://sensory-backend.onrender.com";
+  const API_BASE = process.env.NEXT_PUBLIC_API_BASE || '';
+
 
 
   const handleChange = (
