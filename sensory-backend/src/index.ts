@@ -1,14 +1,20 @@
-// src/index.ts
 import dotenv from 'dotenv';
-dotenv.config();  // This will load environment variables from your .env file
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
 import bookingsRouter from './routes/bookings';
 
 const app = express();
-app.use(cors());
-app.use(express.json());
 
+// ✅ Allow only your frontend domain
+app.use(cors({
+  origin: 'https://sensoryspa1.netlify.app',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type'],
+}));
+
+app.use(express.json());
 app.use('/api/bookings', bookingsRouter);
 
 const PORT = process.env.PORT || 8080;
