@@ -1,9 +1,9 @@
 # netlify.toml (in your repo root)
 
 [build]
-  base    = "src"                   # ← change to your Next.js directory, or remove if it's the root
+  base    = "sensory"                   # ← change to your Next.js directory, or remove if it's the root
   command = "npm install && npm run build"
-  publish = "src/.next"             # ← next build output relative to `base`
+  publish = ".next"             # ← next build output relative to `base`
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
