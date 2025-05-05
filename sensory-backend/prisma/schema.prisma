@@ -17,6 +17,7 @@ model Booking {
   status    String   @default("pending")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  seenByAdmin Boolean  @default(false) // 👈 New field added
 
   @@index([phone])
   @@index([date])

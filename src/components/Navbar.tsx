@@ -1,12 +1,35 @@
+// src/app/components/Navbar.tsx
 'use client';
+
 import Link from 'next/link';
-import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Menu, X, Bell } from 'lucide-react';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [unseenCount, setUnseenCount] = useState(0);
 
-  const links = [
+  // Base URL of your backend, from .env.local
+  const API_BASE = process.env.NEXT_PUBLIC_API_BASE || '';
+
+  // Fetch unseen bookings count on mount
+  useEffect(() => {
+    const fetchUnseen = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/bookings/unseen`);
+        if (res.ok) {
+          const data = await res.json();
+          setUnseenCount(data.length);
+        }
+      } catch (err) {
+        console.error('Error fetching unseen bookings:', err);
+      }
+    };
+
+    fetchUnseen();
+  }, [API_BASE]);
+
+  const links: [string, string][] = [
     ['Services', '/services'],
     ['Booking', '/booking'],
     ['Gallery', '/gallery'],
@@ -18,22 +41,28 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
         <Link
           href="/"
-          className="text-3xl font-bold text-green-300 tracking-wide font-playfair"
+          className="text-3xl font-bold text-green-300 tracking-wide"
         >
           SensorySPA
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex space-x-6">
-          {links.map(([name, path]) => (
-            <Link
-              key={name}
-              href={path}
-              className="text-yellow-400 text-lg font-bold hover:underline hover:underline-offset-4 transition-all font-playfair"
-            >
-              {name}
-            </Link>
-          ))}
+        <div className="hidden md:flex space-x-6 items-center">
+          {links.map(([name, path]) => {
+            const isAdminLink = name === 'Admin Dashboard';
+            return (
+              <Link
+                key={name}
+                href={path}
+                className="flex items-center text-yellow-400 text-lg font-bold hover:underline hover:underline-offset-4 transition-all"
+              >
+                {name}
+                {isAdminLink && unseenCount > 0 && (
+                  <Bell className="ml-1 text-red-400 animate-pulse" size={18} />
+                )}
+              </Link>
+            );
+          })}
         </div>
 
         {/* Mobile Menu Button */}
@@ -48,17 +77,23 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-gradient-to-r from-purple-600 via-pink-500 to-red-400 px-4 pt-2 pb-4 space-y-2 font-playfair">
-          {links.map(([name, path]) => (
-            <Link
-              key={name}
-              href={path}
-              className="block text-black text-lg font-bold hover:underline hover:underline-offset-4 transition-all font-playfair"
-              onClick={() => setIsOpen(false)}
-            >
-              {name}
-            </Link>
-          ))}
+        <div className="md:hidden bg-gradient-to-r from-purple-600 via-pink-500 to-red-400 px-4 pt-2 pb-4 space-y-2">
+          {links.map(([name, path]) => {
+            const isAdminLink = name === 'Admin Dashboard';
+            return (
+              <Link
+                key={name}
+                href={path}
+                className="flex items-center text-black text-lg font-bold hover:underline hover:underline-offset-4 transition-all"
+                onClick={() => setIsOpen(false)}
+              >
+                {name}
+                {isAdminLink && unseenCount > 0 && (
+                  <Bell className="ml-1 text-red-400 animate-pulse" size={18} />
+                )}
+              </Link>
+            );
+          })}
         </div>
       )}
     </nav>
