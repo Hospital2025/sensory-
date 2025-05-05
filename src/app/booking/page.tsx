@@ -47,10 +47,16 @@ export default function BookingPage() {
         body: payload,
       });
 
+      if (!res.ok) {
+        const result = await res.json();
+        alert('❌ Error: ' + (result.error || 'Unknown error'));
+        return;
+      }
+
       const result = await res.json();
       console.log('📥 Server response:', result);
 
-      if (res.ok && result.success) {
+      if (result.success) {
         alert('✅ Booking confirmed!');
         setForm({ name: '', phone: '', service: '', date: '', time: '' });
       } else {
@@ -105,7 +111,7 @@ export default function BookingPage() {
             onChange={handleChange}
             required
             placeholder="Your Phone Number"
-            pattern="[0-9+()\- ]{7,20}"
+            pattern="^[0-9+()\- ]{7,20}$" // Corrected pattern
             className="w-full outline-none py-2 text-gray-800 placeholder-gray-400"
           />
         </div>
