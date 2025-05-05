@@ -22,6 +22,8 @@ export default function BookingPage() {
     'Deep Tissue Massage',
   ];
 
+  const API_BASE = process.env.NEXT_PUBLIC_API_BASE || '';
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -33,7 +35,7 @@ export default function BookingPage() {
     setSubmitting(true);
 
     try {
-      const res = await fetch('/api/bookings', {
+      const res = await fetch(`${API_BASE}/api/bookings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),

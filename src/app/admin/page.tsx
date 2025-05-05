@@ -5,6 +5,8 @@ import { Lock, Calendar, Clock, ListChecks, Users } from 'lucide-react';
 import { Booking } from '@prisma/client';
 
 const ADMIN_PIN = '2020';
+// Pull the API base URL from env, falling back to same‐origin if unset:
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || '';
 
 export default function AdminPage() {
   const [pin, setPin] = useState('');
@@ -25,7 +27,7 @@ export default function AdminPage() {
   // Fetch bookings once authorized
   useEffect(() => {
     if (!authorized) return;
-    fetch('/api/bookings')
+    fetch(`${API_BASE}/api/bookings`)
       .then((res) => res.json())
       .then((data: Booking[]) => setBookings(data))
       .catch(console.error);
@@ -170,5 +172,6 @@ export default function AdminPage() {
     </div>
   );
 }
+
 
 
