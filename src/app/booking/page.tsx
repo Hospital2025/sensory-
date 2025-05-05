@@ -24,8 +24,6 @@ export default function BookingPage() {
 
   const API_BASE = process.env.NEXT_PUBLIC_API_BASE || '';
 
-
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -36,14 +34,21 @@ export default function BookingPage() {
     e.preventDefault();
     setSubmitting(true);
 
+    const url = `${API_BASE}/bookings`;
+    const payload = JSON.stringify(form);
+
+    console.log('📤 Sending request to:', url);
+    console.log('📦 Payload:', payload);
+
     try {
-      const res = await fetch(`${API_BASE}/api/bookings`, {
+      const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: payload,
       });
 
       const result = await res.json();
+      console.log('📥 Server response:', result);
 
       if (res.ok && result.success) {
         alert('✅ Booking confirmed!');
@@ -52,7 +57,7 @@ export default function BookingPage() {
         alert('❌ Error: ' + (result.error || 'Unknown error'));
       }
     } catch (err) {
-      console.error(err);
+      console.error('❌ Network error:', err);
       alert('❌ Network error');
     } finally {
       setSubmitting(false);
