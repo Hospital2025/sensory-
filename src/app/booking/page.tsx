@@ -34,7 +34,7 @@ export default function BookingPage() {
     e.preventDefault();
     setSubmitting(true);
 
-    const url = `${API_BASE}/bookings`;
+    const url = `${API_BASE}/api/bookings`;
     const payload = JSON.stringify(form);
 
     console.log('📤 Sending request to:', url);
