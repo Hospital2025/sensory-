@@ -1,4 +1,4 @@
-// src/app/api/bookings/route.ts
+//src/app/api/bookings/route.ts
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 
@@ -45,4 +45,4 @@ export async function OPTIONS() {
       'Access-Control-Allow-Headers': 'Content-Type',
     },
   });
-}
+} 

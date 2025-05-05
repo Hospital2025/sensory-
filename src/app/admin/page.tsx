@@ -2,10 +2,19 @@
 
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { Lock, Calendar, Clock, ListChecks, Users } from 'lucide-react';
-import { Booking } from '@prisma/client';
+
+// ✅ Define the Booking type manually
+type Booking = {
+  id: number;
+  name: string;
+  phone: string;
+  service: string;
+  date: string;
+  time: string;
+  status: string;
+};
 
 const ADMIN_PIN = '2020';
-// Pull the API base URL from env, falling back to same‐origin if unset:
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || '';
 
 export default function AdminPage() {
@@ -13,18 +22,17 @@ export default function AdminPage() {
   const [authorized, setAuthorized] = useState(false);
   const [bookings, setBookings] = useState<Booking[]>([]);
 
-  // PIN handlers
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/\D/g, '').slice(0, 4);
     setPin(val);
   };
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (pin === ADMIN_PIN) setAuthorized(true);
     else alert('❌ Invalid PIN');
   };
 
-  // Fetch bookings once authorized
   useEffect(() => {
     if (!authorized) return;
     fetch(`${API_BASE}/api/bookings`)
@@ -33,7 +41,6 @@ export default function AdminPage() {
       .catch(console.error);
   }, [authorized]);
 
-  // Summary values
   const total = bookings.length;
   const todayString = new Date().toISOString().slice(0, 10);
   const todaysCount = bookings.filter((b) => {
@@ -43,7 +50,6 @@ export default function AdminPage() {
   const pending = bookings.filter((b) => b.status === 'pending').length;
   const completed = bookings.filter((b) => b.status === 'confirmed').length;
 
-  // PIN screen
   if (!authorized) {
     return (
       <div className="min-h-screen bg-[url('/admin-bg.jpg')] bg-cover bg-center flex items-center justify-center">
@@ -73,10 +79,8 @@ export default function AdminPage() {
     );
   }
 
-  // Dashboard
   return (
     <div className="min-h-screen bg-black font-playfair">
-      {/* Header */}
       <header className="bg-brown-800 text-green-300 py-6 px-4 sm:px-8 flex items-center justify-between">
         <h1 className="text-2xl font-bold">Admin Dashboard</h1>
         <div className="flex items-center gap-4">
@@ -87,7 +91,6 @@ export default function AdminPage() {
         </div>
       </header>
 
-      {/* Summary Cards */}
       <div className="px-4 sm:px-8 py-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {[
           { title: 'Total Bookings', icon: <ListChecks size={24} />, value: total },
@@ -108,7 +111,6 @@ export default function AdminPage() {
         ))}
       </div>
 
-      {/* Bookings Table for sm+ */}
       <div className="px-4 sm:px-8 pb-12 hidden sm:block">
         <div className="overflow-x-auto bg-black shadow rounded-lg">
           <table className="min-w-full">
@@ -150,7 +152,6 @@ export default function AdminPage() {
         </div>
       </div>
 
-      {/* Bookings Cards for mobile */}
       <div className="px-4 sm:hidden pb-12 space-y-4">
         {bookings.length === 0 ? (
           <div className="bg-white rounded-lg shadow p-4 text-center text-black">
