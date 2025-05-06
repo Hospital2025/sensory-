@@ -8,26 +8,26 @@ import { Menu, X, Bell } from 'lucide-react';
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [unseenCount, setUnseenCount] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  // Base URL of your backend, from .env.local
   const API_BASE = process.env.NEXT_PUBLIC_API_BASE || '';
 
-  // Fetch unseen bookings count on mount
+  // Determine if admin is logged in (persisted via localStorage)
   useEffect(() => {
-    const fetchUnseen = async () => {
-      try {
-        const res = await fetch(`${API_BASE}/api/bookings/unseen`);
-        if (res.ok) {
-          const data = await res.json();
-          setUnseenCount(data.length);
-        }
-      } catch (err) {
-        console.error('Error fetching unseen bookings:', err);
-      }
-    };
+    setIsAdmin(localStorage.getItem('isAdmin') === 'true');
+  }, []);
 
-    fetchUnseen();
-  }, [API_BASE]);
+  // Fetch unseen bookings only when not admin
+  useEffect(() => {
+    if (!isAdmin) {
+      fetch(`${API_BASE}/api/bookings/unseen`)
+        .then(res => res.ok ? res.json() : [])
+        .then((data: any[]) => setUnseenCount(data.length))
+        .catch(console.error);
+    } else {
+      setUnseenCount(0);
+    }
+  }, [API_BASE, isAdmin]);
 
   const links: [string, string][] = [
     ['Services', '/services'],
@@ -39,14 +39,10 @@ export default function Navbar() {
   return (
     <nav className="bg-gradient-to-r from-purple-900 via-yellow-900 to-black shadow-md py-4 sticky top-0 z-50 font-playfair">
       <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-        <Link
-          href="/"
-          className="text-3xl font-bold text-green-300 tracking-wide"
-        >
+        <Link href="/" className="text-3xl font-bold text-green-300 tracking-wide">
           SensorySPA
         </Link>
 
-        {/* Desktop Menu */}
         <div className="hidden md:flex space-x-6 items-center">
           {links.map(([name, path]) => {
             const isAdminLink = name === 'Admin Dashboard';
@@ -65,7 +61,6 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Mobile Menu Button */}
         <button
           className="md:hidden text-yellow-300 focus:outline-none"
           onClick={() => setIsOpen(!isOpen)}
@@ -75,7 +70,6 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-gradient-to-r from-purple-600 via-pink-500 to-red-400 px-4 pt-2 pb-4 space-y-2">
           {links.map(([name, path]) => {
@@ -99,4 +93,3 @@ export default function Navbar() {
     </nav>
   );
 }
-
