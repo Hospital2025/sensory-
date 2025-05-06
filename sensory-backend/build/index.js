@@ -7,23 +7,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const express_1 = __importDefault(require("express"));
-const cors_1 = __importDefault(require("cors"));
 const bookings_1 = __importDefault(require("./routes/bookings"));
 const app = (0, express_1.default)();
-// 🌐 Whitelist your Netlify front‑end
-const ALLOWED_ORIGIN = 'https://sensoryspa1.netlify.app';
-const corsOptions = {
-    origin: ALLOWED_ORIGIN,
-    methods: ['GET', 'POST', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type'],
-};
-// 1️⃣ Global CORS middleware
-app.use((0, cors_1.default)(corsOptions));
-// 2️⃣ Global pre‑flight handler (for PATCH, etc)
-app.options('*', (0, cors_1.default)(corsOptions));
+// ————————————————————————————————————————————————
+// Manual CORS + OPTIONS handler
+// ————————————————————————————————————————————————
+app.use((req, res, next) => {
+    // allow your Netlify frontend
+    res.header('Access-Control-Allow-Origin', 'https://sensoryspa1.netlify.app');
+    // allow GET/POST/PATCH/OPTIONS
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    // short‑circuit preflight
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(204);
+    }
+    next();
+});
+// parse JSON bodies
 app.use(express_1.default.json());
-// mount all booking routes under /api/bookings
+// mount your bookings API
 app.use('/api/bookings', bookings_1.default);
+// start server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`✅ Server running on port ${PORT}`);
