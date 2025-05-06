@@ -1,7 +1,6 @@
 {
   "name": "sensory-backend",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev src/index.ts",
@@ -9,14 +8,12 @@
     "start": "node build/index.js",
     "prisma": "prisma"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@prisma/client": "^6.7.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "path-to-regexp": "6.2.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
@@ -27,3 +24,4 @@
     "typescript": "^5.8.3"
   }
 }
+
