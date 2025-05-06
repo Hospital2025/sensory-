@@ -3,7 +3,7 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { Lock, Calendar, Clock, ListChecks, Users } from 'lucide-react';
 
-// ✅ Define the Booking type manually
+// 💾 Define your Booking type including seenByAdmin
 type Booking = {
   id: number;
   name: string;
@@ -12,6 +12,7 @@ type Booking = {
   date: string;
   time: string;
   status: string;
+  seenByAdmin: boolean;
 };
 
 const ADMIN_PIN = '2020';
@@ -22,48 +23,65 @@ export default function AdminPage() {
   const [authorized, setAuthorized] = useState(false);
   const [bookings, setBookings] = useState<Booking[]>([]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value.replace(/\D/g, '').slice(0, 4);
-    setPin(val);
+  // PIN handlers
+  const handlePinChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPin(e.target.value.replace(/\D/g, '').slice(0, 4));
   };
-
-  const handleSubmit = (e: FormEvent) => {
+  const handlePinSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (pin === ADMIN_PIN) setAuthorized(true);
     else alert('❌ Invalid PIN');
   };
 
+  // When authorized, mark unseen as seen, then fetch all
   useEffect(() => {
     if (!authorized) return;
-    fetch(`${API_BASE}/api/bookings`)
-      .then((res) => res.json())
-      .then((data: Booking[]) => setBookings(data))
-      .catch(console.error);
+
+    (async () => {
+      try {
+        // 1) fetch unseen
+        const unseenRes = await fetch(`${API_BASE}/api/bookings/unseen`);
+        if (unseenRes.ok) {
+          const unseen: Booking[] = await unseenRes.json();
+          // 2) mark each as seen
+          await Promise.all(
+            unseen.map(b =>
+              fetch(`${API_BASE}/api/bookings/${b.id}/mark-seen`, { method: 'PATCH' })
+            )
+          );
+        }
+        // 3) fetch all bookings
+        const allRes = await fetch(`${API_BASE}/api/bookings`);
+        if (allRes.ok) {
+          setBookings(await allRes.json());
+        }
+      } catch (err) {
+        console.error('Admin fetch error:', err);
+      }
+    })();
   }, [authorized]);
 
+  // Statistics
   const total = bookings.length;
-  const todayString = new Date().toISOString().slice(0, 10);
-  const todaysCount = bookings.filter((b) => {
-    const iso = new Date(b.date).toISOString().slice(0, 10);
-    return iso === todayString;
-  }).length;
-  const pending = bookings.filter((b) => b.status === 'pending').length;
-  const completed = bookings.filter((b) => b.status === 'confirmed').length;
+  const today = new Date().toISOString().slice(0, 10);
+  const todayCount = bookings.filter(b => b.date.slice(0, 10) === today).length;
+  const pending = bookings.filter(b => b.status === 'pending').length;
+  const confirmed = bookings.filter(b => b.status === 'confirmed').length;
 
+  // PIN screen
   if (!authorized) {
     return (
       <div className="min-h-screen bg-[url('/admin-bg.jpg')] bg-cover bg-center flex items-center justify-center">
         <div className="bg-black/70 backdrop-blur-md rounded-2xl p-8 w-full max-w-sm text-center font-playfair shadow-lg">
           <Lock size={48} className="mx-auto text-yellow-300 mb-4" />
           <h1 className="text-2xl font-semibold mb-6 text-green-400">Admin Access</h1>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handlePinSubmit} className="space-y-4">
             <input
               type="password"
-              inputMode="numeric"
-              pattern="\d*"
               value={pin}
-              onChange={handleChange}
+              onChange={handlePinChange}
               placeholder="Enter 4-digit PIN"
+              maxLength={4}
               className="w-full text-center text-xl tracking-widest py-2 border-b-2 border-gray-100 focus:border-brown-800 outline-none bg-transparent text-white"
             />
             <button
@@ -79,34 +97,33 @@ export default function AdminPage() {
     );
   }
 
+  // Dashboard
   return (
     <div className="min-h-screen bg-black font-playfair">
       <header className="bg-brown-800 text-green-300 py-6 px-4 sm:px-8 flex items-center justify-between">
         <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-        <div className="flex items-center gap-4">
-          <Users size={24} />
-          <button onClick={() => setAuthorized(false)} className="text-sm underline">
-            Logout
-          </button>
-        </div>
+        <button
+          onClick={() => {
+            setAuthorized(false);
+            setBookings([]);
+            setPin('');
+          }}
+          className="text-sm underline"
+        >
+          Logout
+        </button>
       </header>
 
       <div className="px-4 sm:px-8 py-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {[
-          { title: 'Total Bookings', icon: <ListChecks size={24} />, value: total },
-          { title: "Today's Appts", icon: <Calendar size={24} />, value: todaysCount },
-          { title: 'Pending', icon: <Clock size={24} />, value: pending },
-          { title: 'Completed', icon: <Users size={24} />, value: completed },
-        ].map(({ title, icon, value }) => (
-          <div
-            key={title}
-            className="bg-black rounded-2xl shadow p-4 flex items-center space-x-3 sm:space-x-4"
-          >
-            <div className="p-2 sm:p-3 bg-brown-800 text-white rounded-lg">{icon}</div>
-            <div>
-              <p className="text-sm text-white">{title}</p>
-              <p className="text-lg sm:text-xl font-semibold">{value}</p>
-            </div>
+          { title: 'Total Bookings', value: total },
+          { title: "Today's Appts", value: todayCount },
+          { title: 'Pending', value: pending },
+          { title: 'Confirmed', value: confirmed },
+        ].map(card => (
+          <div key={card.title} className="bg-black rounded-2xl shadow p-4">
+            <p className="text-sm text-white">{card.title}</p>
+            <p className="text-lg sm:text-xl font-semibold text-white">{card.value}</p>
           </div>
         ))}
       </div>
@@ -116,59 +133,25 @@ export default function AdminPage() {
           <table className="min-w-full">
             <thead className="bg-black">
               <tr>
-                {['Booking ID','Service','Client Phone','Date','Time','Status'].map((h) => (
-                  <th
-                    key={h}
-                    className="px-4 py-3 text-left text-sm font-medium text-white"
-                  >
-                    {h}
-                  </th>
+                {['ID','Service','Phone','Date','Time','Status'].map(h => (
+                  <th key={h} className="px-4 py-3 text-left text-sm text-white">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {bookings.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="px-4 py-6 text-center text-black">
-                    No bookings yet.
-                  </td>
+              {bookings.map(b => (
+                <tr key={b.id} className="border-b border-gray-700">
+                  <td className="px-4 py-3 text-sm text-white">{b.id}</td>
+                  <td className="px-4 py-3 text-sm text-white">{b.service}</td>
+                  <td className="px-4 py-3 text-sm text-white">{b.phone}</td>
+                  <td className="px-4 py-3 text-sm text-white">{new Date(b.date).toLocaleDateString()}</td>
+                  <td className="px-4 py-3 text-sm text-white">{b.time}</td>
+                  <td className="px-4 py-3 text-sm text-white">{b.status}</td>
                 </tr>
-              ) : (
-                bookings.map((b) => (
-                  <tr key={b.id} className="border-b">
-                    <td className="px-4 py-3 text-sm">{b.id}</td>
-                    <td className="px-4 py-3 text-sm">{b.service}</td>
-                    <td className="px-4 py-3 text-sm">{b.phone}</td>
-                    <td className="px-4 py-3 text-sm">
-                      {new Date(b.date).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 py-3 text-sm">{b.time}</td>
-                    <td className="px-4 py-3 text-sm">{b.status}</td>
-                  </tr>
-                ))
-              )}
+              ))}
             </tbody>
           </table>
         </div>
-      </div>
-
-      <div className="px-4 sm:hidden pb-12 space-y-4">
-        {bookings.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-4 text-center text-black">
-            No bookings yet.
-          </div>
-        ) : (
-          bookings.map((b) => (
-            <div key={b.id} className="bg-black rounded-lg shadow p-4 space-y-2 text-white">
-              <p><span className="font-semibold">ID:</span> {b.id}</p>
-              <p><span className="font-semibold">Service:</span> {b.service}</p>
-              <p><span className="font-semibold">Phone:</span> {b.phone}</p>
-              <p><span className="font-semibold">Date:</span> {new Date(b.date).toLocaleDateString()}</p>
-              <p><span className="font-semibold">Time:</span> {b.time}</p>
-              <p><span className="font-semibold">Status:</span> {b.status}</p>
-            </div>
-          ))
-        )}
       </div>
     </div>
   );

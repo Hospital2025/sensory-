@@ -1,5 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+// sensory‑backend/src/routes/bookings.ts
 import { Router } from 'express';
+import { PrismaClient } from '@prisma/client';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -19,12 +20,11 @@ router.get('/', async (req, res) => {
 });
 
 // POST /api/bookings
-// Create a new booking
+// Create a new booking (default seenByAdmin: false)
 router.post('/', async (req, res) => {
   const { name, phone, service, date, time } = req.body;
 
   try {
-    const now = new Date();
     const booking = await prisma.booking.create({
       data: {
         name,
@@ -32,7 +32,7 @@ router.post('/', async (req, res) => {
         service,
         date: new Date(date),
         time,
-        seenByAdmin: false, // Default value for seenByAdmin
+        seenByAdmin: false,
       },
     });
     res.json({ success: true, booking });
@@ -43,35 +43,34 @@ router.post('/', async (req, res) => {
 });
 
 // GET /api/bookings/unseen
-// Fetch all unseen bookings (seenByAdmin: false)
+// Fetch all bookings where seenByAdmin is still false
 router.get('/unseen', async (req, res) => {
   try {
-    const unseenBookings = await prisma.booking.findMany({
-      where: {
-        seenByAdmin: false,
-      },
+    const unseen = await prisma.booking.findMany({
+      where: { seenByAdmin: false },
+      orderBy: { date: 'asc' },
     });
-    res.json(unseenBookings);
-  } catch (err) {
-    console.error('Error fetching unseen bookings:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.json(unseen);
+  } catch (error) {
+    console.error('❌ Error fetching unseen bookings:', error);
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
   }
 });
 
 // PATCH /api/bookings/:id/mark-seen
-// Mark a booking as seen by the admin
+// Mark a single booking’s seenByAdmin → true
 router.patch('/:id/mark-seen', async (req, res) => {
-  const { id } = req.params;
+  const id = parseInt(req.params.id, 10);
 
   try {
-    const updatedBooking = await prisma.booking.update({
-      where: { id: parseInt(id) },
+    const updated = await prisma.booking.update({
+      where: { id },
       data: { seenByAdmin: true },
     });
-    res.json(updatedBooking);
-  } catch (err) {
-    console.error('Error marking booking as seen:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.json({ success: true, booking: updated });
+  } catch (error) {
+    console.error('❌ Error marking booking as seen:', error);
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
   }
 });
 
