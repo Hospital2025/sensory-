@@ -47,9 +47,9 @@ export default function Home() {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {[
-            { title: 'Haircut & Grooming', img: '/haircut.jpg' },
+            { title: 'Haircut & Grooming', img: '/cut.jpg' },
             { title: 'Spa Treatments', img: '/spa.jpg' },
-            { title: 'Pedicure & Manicure', img: '/nails.jpg' },
+            { title: 'Pedicure & Manicure', img: '/nail.jpg' },
           ].map((service) => (
             <div
               key={service.title}
