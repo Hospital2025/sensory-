@@ -9,42 +9,51 @@ const services = [
     title: 'Haircut & Styling',
     Icon: Scissors,
     description: 'Precision cuts, fades, and custom styles to keep you looking sharp.',
-    price: 'from Ksh 350',
-    img: '/services/haircut.jpg',
+    price: 'Ksh.300; kid cut Ksh.150',
+    img:'/sty.jpg',
   },
   {
     title: 'Full Spa Treatment',
     Icon: Sun,
-    description: 'A complete relaxation package: massage, steam, and aromatherapy.',
-    price: 'from Ksh 2,000',
-    img: '/services/spa.jpg',
+    description:(
+      <>
+    A complete relaxation package: massage, steam, and aromatherapy.
+    <ul className="mt-2 list-disc list-inside text-sm text-black">
+    <li>Swedish massage Ksh 2,500</li>
+          <li>Hot stone massage Ksh 3,000</li>
+          <li>Deep tissue massage Ksh 3,500</li>
+        </ul>
+      </>
+    ),
+    price: 'From Ksh 2,500',
+    img: '/full.jpg',
   },
   {
     title: 'Manicure',
     Icon: Hand,
     description: 'Groomed nails, cuticle care, and polish for that perfect finish.',
-    price: 'from Ksh 800',
-    img: '/services/manicure.jpg',
+    price: 'from Ksh. 500',
+    img: '/cure.jpg',
   },
   {
     title: 'Pedicure',
     Icon: Footprints,
     description: 'Foot soak, exfoliation, nail shaping and polish—step out in style.',
-    price: 'from Ksh 1,000',
-    img: '/services/pedicure.jpg',
+    price: 'from Ksh. 1,000',
+    img: '/pedi.jpg',
   },
   {
     title: 'Facial Scrub',
     Icon: Droplet,
     description: 'Deep cleansing exfoliation for smooth, glowing skin.',
-    price: 'from Ksh 400',
+    price: 'from Ksh. 500, full facial Ksh. 1500',
     img: '/services/facial.jpg',
   },
   {
     title: 'Deep Tissue Massage',
     Icon: Activity,
     description: 'Release muscle tension and improve circulation with expert massage.',
-    price: 'from Ksh 2,000',
+    price: 'from Ksh. 2,000',
     img: '/services/massage.jpg',
   },
 ];
