@@ -49,20 +49,15 @@ export default function Footer() {
           <ul className="space-y-3 text-sm">
             <li className="flex items-center gap-2">
               <MapPin size={16} />
-              64 Arcade opposite Catholic University, Eldoret
+              64Plaza opposite Catholic University, Eldoret
             </li>
             <li className="flex items-center gap-2">
               <Phone size={16} />
               <Link href="tel:+254712345678" className="hover:underline">
-                +254 712 345 678
+                0722110013
               </Link>
             </li>
-            <li className="flex items-center gap-2">
-              <Mail size={16} />
-              <Link href="mailto:hello@sensoryspa.com" className="hover:underline">
-                hello@sensoryspa.com
-              </Link>
-            </li>
+            
           </ul>
         </div>
       </div>
@@ -70,25 +65,31 @@ export default function Footer() {
       {/* Divider */}
       <div className="border-t border-black/20 my-8 mx-6" />
 
-      {/* Social & Copyright */}
-      <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center text-sm">
-        {/* Social Icons */}
-        <div className="flex gap-6 mb-4 sm:mb-0">
-          <Link href="https://instagram.com" aria-label="Instagram">
-            <Instagram size={20} className="hover:opacity-80 transition" />
-          </Link>
-          <Link href="https://facebook.com" aria-label="Facebook">
-            <Facebook size={20} className="hover:opacity-80 transition" />
-          </Link>
-          <Link href="https://twitter.com" aria-label="Twitter">
-            <Twitter size={20} className="hover:opacity-80 transition" />
-          </Link>
-        </div>
-        {/* Copyright */}
-        <div className="text-black/80">
-          &copy; {new Date().getFullYear()} Sensory Spa & Barber. All rights reserved.
-        </div>
-      </div>
+     {/* Social & Copyright */}
+<div className="max-w-7xl mx-auto px-6 py-6">
+  {/* Social Icons (centered) */}
+  <div className="flex justify-center gap-6 mb-4">
+    <Link href="https://instagram.com" aria-label="Instagram">
+      <Instagram size={20} className="hover:opacity-80 transition" />
+    </Link>
+    <Link href="https://facebook.com" aria-label="Facebook">
+      <Facebook size={20} className="hover:opacity-80 transition" />
+    </Link>
+    <Link href="https://twitter.com" aria-label="Twitter">
+      <Twitter size={20} className="hover:opacity-80 transition" />
+    </Link>
+  </div>
+
+  {/* Copyright & Developer Credit */}
+  <div className="text-center text-sm text-black/80 space-y-1">
+    <div>
+      &copy; {new Date().getFullYear()} Sensory Spa & Barber. All rights reserved.
+    </div>
+    <div className="text-white font-semibold">
+    Developed & Designed by Humphries.
+    </div>
+  </div>
+</div>
     </footer>
   );
 }
