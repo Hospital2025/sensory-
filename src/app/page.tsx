@@ -21,8 +21,8 @@ export default function Home() {
       </section>
 
 {/* Video Section */}
-<section className="bg-gradient-to-br from-rose-50 via-pink-100 to-purple-50 py-16 px-4 sm:px-12">
-  <div className="max-w-4xl mx-auto">
+<section className="bg-gradient-to-br from-rose-50 via-pink-100 to-purple-50 py-5 px-4 sm:px-12">
+  <div className="max-w-2xl mx-auto">
     <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-800 mb-8">
       Discover the Sensory Experience
     </h2>
