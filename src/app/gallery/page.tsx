@@ -1,79 +1,104 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import Image from 'next/image';
-import { X } from 'lucide-react';
+import { useRef } from 'react'
+import { Play, Pause, Square, Volume2 } from 'lucide-react'
 
-const galleryImages = [
-  { src: '/gallery/barber1.jpg', alt: 'Precision haircut in progress' },
-  { src: '/gallery/spa1.jpg',    alt: 'Relaxing spa treatment scene' },
-  { src: '/gallery/barber2.jpg', alt: 'Classic shave and trim' },
-  { src: '/gallery/spa2.jpg',    alt: 'Aromatherapy stones and candles' },
-  { src: '/gallery/barber3.jpg', alt: 'Barber tools on wooden tray' },
-  { src: '/gallery/spa3.jpg',    alt: 'Facial scrub application' },
-  { src: '/gallery/barber4.jpg', alt: 'Sharp fade haircut' },
-  { src: '/gallery/spa4.jpg',    alt: 'Foot massage with hot stones' },
-];
+const videoGallery = [
+  { src: '/shave.mp4', label: 'Number 1 buzz cut with a full, defined beard' },
+  { src: '/baby.mp4', label: 'Tapered low fade with hairline art' },
+  { src: '/rename.mp4', label: 'Boxed braids with side tapers' },
+  { src: '/mani.mp4', label: 'Manicure' },
+  { src: '/face.mp4', label: 'Face Routine Therapy' },
+  { src: '/videos/barber3.mp4', label: '' },
+]
 
 export default function GalleryPage() {
-  const [selected, setSelected] = useState<{ src: string; alt: string } | null>(null);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
+
+  const handleControl = (
+    index: number,
+    action: 'play' | 'pause' | 'stop' | 'volume'
+  ) => {
+    const video = videoRefs.current[index]
+    if (!video) return
+
+    switch (action) {
+      case 'play':
+        video.play()
+        break
+      case 'pause':
+        video.pause()
+        break
+      case 'stop':
+        video.pause()
+        video.currentTime = 0
+        break
+      case 'volume':
+        video.muted = !video.muted
+        break
+    }
+  }
 
   return (
-    <div className="min-h-screen bg-gray-100 font-playfair">
-      {/* Page Header */}
-      <header className="text-center py-12 px-6">
-        <h1 className="text-5xl font-bold text-gray-800 mb-2">Our Gallery</h1>
-        <p className="text-gray-600 max-w-xl mx-auto">
-          Explore moments of craftsmanship and calm — click any image to enlarge.
-        </p>
-      </header>
+    <main className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-purple-50 py-5 px-4 sm:px-12 font-playfair">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-5xl font-bold text-center text-black mb-12">
+          Video Gallery
+        </h1>
 
-      {/* Masonry Grid */}
-      <section className="px-4 sm:px-8 lg:px-16">
-        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
-          {galleryImages.map((img, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          {videoGallery.map((vid, i) => (
             <div
               key={i}
-              className="relative group cursor-pointer break-inside-avoid"
-              onClick={() => setSelected(img)}
+              className="bg-white rounded-xl shadow-xl overflow-hidden group transition-transform transform hover:scale-[1.01]"
             >
-              <Image
-                src={img.src}
-                alt={img.alt}
-                width={600}
-                height={800}
-                className="w-full mb-4 rounded-xl object-cover transform transition-transform duration-500 group-hover:scale-105"
+              <video
+                ref={(el) => {
+                  videoRefs.current[i] = el
+                }}
+                src={vid.src}
+                className="w-full h-64 object-cover"
+                controls={false}
+                muted
               />
-              {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-end">
-                <p className="text-white p-4 text-sm">{img.alt}</p>
+              <div className="p-4 flex items-center justify-between">
+                <p className="text-gray-700 font-semibold">{vid.label}</p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => handleControl(i, 'play')}
+                    className="text-green-600 hover:text-green-800"
+                    aria-label="Play"
+                  >
+                    <Play size={20} />
+                  </button>
+                  <button
+                    onClick={() => handleControl(i, 'pause')}
+                    className="text-yellow-600 hover:text-yellow-800"
+                    aria-label="Pause"
+                  >
+                    <Pause size={20} />
+                  </button>
+                  <button
+                    onClick={() => handleControl(i, 'stop')}
+                    className="text-red-600 hover:text-red-800"
+                    aria-label="Stop"
+                  >
+                    <Square size={20} />
+                  </button>
+                  <button
+                    onClick={() => handleControl(i, 'volume')}
+                    className="text-blue-600 hover:text-blue-800"
+                    aria-label="Toggle Mute"
+                  >
+                    <Volume2 size={20} />
+                  </button>
+                </div>
               </div>
             </div>
           ))}
         </div>
-      </section>
-
-      {/* Lightbox Modal */}
-      {selected && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
-          onClick={() => setSelected(null)}
-        >
-          <button className="absolute top-4 right-4 text-white">
-            <X size={32} />
-          </button>
-          <div className="relative max-w-3xl w-full">
-            <Image
-              src={selected.src}
-              alt={selected.alt}
-              width={1200}
-              height={1600}
-              className="w-full rounded-xl"
-            />
-            <p className="mt-2 text-center text-white">{selected.alt}</p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+      </div>
+    </main>
+  )
 }
+
