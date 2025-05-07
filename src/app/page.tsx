@@ -21,12 +21,12 @@ export default function Home() {
       </section>
 
 {/* Video Section */}
-<section className="bg-gradient-to-br from-rose-50 via-pink-100 to-purple-50 py-5 px-4 sm:px-12">
+<section className="bg-gradient-to-br from-stone-400 via-pink-200 to-stone-400 py-5 px-4 sm:px-12">
   <div className="max-w-2xl mx-auto">
     <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-800 mb-8">
       Discover the Sensory Experience
     </h2>
-    <div className="aspect-video rounded-lg overflow-hidden shadow-2xl ring-10 ring-pink-200">
+    <div className="aspect-video rounded-lg overflow-hidden shadow-2xl ring-2 ring-green-300">
       <video
         className="w-full h-full object-cover"
         src="/adv.mp4"
@@ -41,7 +41,7 @@ export default function Home() {
 
 
       {/* Services Overview */}
-      <section className="py-16 px-6 sm:px-12 bg-white">
+      <section className="py-16 px-6 sm:px-12 bg-stone-200">
         <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-800 mb-12">
           Our Signature Services
         </h2>
@@ -50,6 +50,8 @@ export default function Home() {
             { title: 'Haircut & Grooming', img: '/cut.jpg' },
             { title: 'Spa Treatments', img: '/spa.jpg' },
             { title: 'Pedicure & Manicure', img: '/nail.jpg' },
+            { title: 'Facials', img: '/face.jpg' },
+
           ].map((service) => (
             <div
               key={service.title}
