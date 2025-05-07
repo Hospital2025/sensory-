@@ -4,12 +4,15 @@ import { useRef } from 'react'
 import { Play, Pause, Square, Volume2 } from 'lucide-react'
 
 const videoGallery = [
+  { src: '/ride.mp4', label: 'Refresh your skin and glow with our revitalizing body scrub' },
   { src: '/shave.mp4', label: 'Number 1 buzz cut with a full, defined beard' },
   { src: '/baby.mp4', label: 'Tapered low fade with hairline art' },
+  { src: '/deluxe.mp4', label: 'Indulge in our deluxe facial, deep cleansing, intense hydration, and a radiant glow you can feel' },
   { src: '/rename.mp4', label: 'Boxed braids with side tapers' },
+  { src: '/wax.mp4', label: 'We wax it everywhere, no spot is too shy!' },
   { src: '/mani.mp4', label: 'Manicure' },
   { src: '/face.mp4', label: 'Face Routine Therapy' },
-  { src: '/videos/barber3.mp4', label: '' },
+
 ]
 
 export default function GalleryPage() {
