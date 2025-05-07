@@ -42,8 +42,8 @@ export default function GalleryPage() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-purple-50 py-5 px-4 sm:px-12 font-playfair">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-5xl font-bold text-center text-black mb-12">
-          Video Gallery
+        <h1 className="text-2xl font-bold text-center text-black mb-12">
+          Sleek
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
