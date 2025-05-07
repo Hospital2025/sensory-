@@ -2,6 +2,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { Menu, X, Bell } from 'lucide-react';
 
@@ -9,10 +10,8 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [unseenCount, setUnseenCount] = useState(0);
 
-  // Base URL of your backend, from .env.local
   const API_BASE = process.env.NEXT_PUBLIC_API_BASE || '';
 
-  // Fetch unseen bookings count on mount
   useEffect(() => {
     const fetchUnseen = async () => {
       try {
@@ -39,11 +38,15 @@ export default function Navbar() {
   return (
     <nav className="bg-gradient-to-r from-purple-900 via-yellow-900 to-black shadow-md py-4 sticky top-0 z-50 font-playfair">
       <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-        <Link
-          href="/"
-          className="text-3xl font-bold text-green-300 tracking-wide"
-        >
-          SensorySPA
+        <Link href="/" className="block">
+          <Image
+            src="/sensory.jpg"
+            alt="Sensory Spa Logo"
+            width={120}
+            height={70}
+            className="rounded-sm"
+            priority
+          />
         </Link>
 
         {/* Desktop Menu */}
