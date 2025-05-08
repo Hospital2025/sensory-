@@ -55,7 +55,7 @@ export default function Footer() {
         <div className="flex flex-col items-center">
           <Tag size={36} className="mb-2" />
           <p className="text-2xl font-bold">Affordable</p>
-          <p className="text-sm">Latest Products</p>
+          <p className="text-sm">Latest services</p>
         </div>
       </div>
 
