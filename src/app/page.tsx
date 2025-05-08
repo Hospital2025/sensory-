@@ -81,7 +81,7 @@ export default function Home() {
           Our Space & Experience
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {['/gallery1.jpg', '/gallery2.jpg', '/gallery3.jpg'].map((img, index) => (
+          {['/bab.jpg', '/bed.jpg'].map((img, index) => (
             <div key={index} className="rounded-lg overflow-hidden shadow">
               <Image
                 src={img}

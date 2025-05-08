@@ -47,14 +47,7 @@ const services = [
     Icon: Droplet,
     description: 'Deep cleansing exfoliation for smooth, glowing skin.',
     price: 'from Ksh. 500, full facial Ksh. 1500',
-    img: '/services/facial.jpg',
-  },
-  {
-    title: 'Deep Tissue Massage',
-    Icon: Activity,
-    description: 'Release muscle tension and improve circulation with expert massage.',
-    price: 'from Ksh. 2,000',
-    img: '/services/massage.jpg',
+    img: '/sc.jpg',
   },
 ];
 

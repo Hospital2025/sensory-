@@ -36,14 +36,14 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="bg-gradient-to-r from-purple-900 via-yellow-900 to-black shadow-md py-4 sticky top-0 z-50 font-playfair">
-      <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
+    <nav className="bg-gradient-to-r from-purple-900 via-yellow-900 to-black shadow-md py-1 sticky top-0 z-50 font-playfair">
+      <div className="max-w-7xl mx-auto px-2 flex justify-between items-center">
         <Link href="/" className="block">
           <Image
             src="/sensory.jpg"
             alt="Sensory Spa Logo"
             width={120}
-            height={70}
+            height={50}
             className="rounded-sm"
             priority
           />
