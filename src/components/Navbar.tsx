@@ -61,7 +61,7 @@ export default function Navbar() {
               >
                 {name}
                 {isAdminLink && unseenCount > 0 && (
-                  <Bell className="ml-1 text-red-400 animate-pulse" size={18} />
+                  <Bell className="ml-1 text-red-500 animate-pulse" size={18} />
                 )}
               </Link>
             );
@@ -92,7 +92,7 @@ export default function Navbar() {
               >
                 {name}
                 {isAdminLink && unseenCount > 0 && (
-                  <Bell className="ml-1 text-red-400 animate-pulse" size={18} />
+                  <Bell className="ml-1 text-white animate-pulse" size={18} />
                 )}
               </Link>
             );
