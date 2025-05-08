@@ -71,7 +71,7 @@ export default function AdminPage() {
   // PIN screen
   if (!authorized) {
     return (
-      <div className="min-h-screen bg-[url('/admin-bg.jpg')] bg-cover bg-center flex items-center justify-center">
+      <div className="min-h-screen bg-black bg-[url('/admin-bg.jpg')] bg-cover bg-center flex items-center justify-center">
         <div className="bg-black/70 backdrop-blur-md rounded-2xl p-8 w-full max-w-sm text-center font-playfair shadow-lg">
           <Lock size={48} className="mx-auto text-yellow-300 mb-4" />
           <h1 className="text-2xl font-semibold mb-6 text-green-400">Admin Access</h1>
