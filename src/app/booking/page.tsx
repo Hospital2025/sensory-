@@ -71,7 +71,7 @@ export default function BookingPage() {
   };
 
   return (
-    <div className="font-playfair px-6 py-12 sm:px-12">
+    <div className=" min-h-screen bg-black text-white font-playfair px-6 py-12 sm:px-12">
       {/* Header */}
       <div className="text-center mb-12">
         <h1 className="text-4xl sm:text-5xl font-bold mb-4 text-green-300">
